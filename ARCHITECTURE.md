@@ -5,65 +5,106 @@ This document provides a visual reference of the codebase architecture to help n
 ## Architecture Diagram
 
 ```mermaid
-graph TD
-    subgraph Frontend
-        Client[Client Browser]
-        Pages[Pages]
-        Components[UI Components] --> ShadCN[ShadCN UI Library]
-        Components --> Tailwind[Tailwind CSS]
-        Storybook[Storybook Documentation]
-        Components --> Storybook
-    end
-
-    subgraph Backend
-        NextServer[Next.js Server]
-        ServerComponents[Server Components]
-        API[API Routes]
-        TRPC[tRPC API Layer]
-        Database[(Database)]
-        PrismaORM[Prisma ORM]
-        
-        API --> TRPC
-        TRPC --> PrismaORM
-        PrismaORM --> Database
-        ServerComponents --> PrismaORM
-    end
-
-    subgraph Auth
-        NextAuth[NextAuth.js]
-        NextAuthPrisma[NextAuth Prisma Adapter]
-        EmailProvider[Email Provider]
-        
-        NextAuth --> NextAuthPrisma
-        NextAuthPrisma --> PrismaORM
-        NextAuth --> EmailProvider
-    end
-
-    subgraph AI_Services
-        OpenAI[OpenAI Integration]
-        Groq[Groq Integration]
-        GoogleAI[Google Generative AI]
-    end
+classDiagram
+    %% Main Application Components
+    class NextApp {
+        +app/ : Routes
+        +components/ : UI Components
+        +lib/ : Utilities
+        +prisma/ : Database
+        +public/ : Static Assets
+        +stories/ : Storybook
+    }
     
-    subgraph Storage
-        S3[AWS S3]
-        Supabase[Supabase]
-    end
-
-    subgraph EventProcessing
-        Inngest[Inngest]
-    end
-
-    Client --> Pages
-    Pages --> Components
-    Pages --> ServerComponents
-    Client --> API
-    API --> AI_Services
-    API --> Storage
-    API --> EventProcessing
+    %% Frontend Components
+    class Frontend {
+        +Pages
+        +Components
+        +Styling
+    }
     
-    NextServer --> Auth
-    Client --> Auth
+    class Components {
+        +UI Elements
+        +Layout
+        +Forms
+        +Navigation
+    }
+    
+    class Styling {
+        +Tailwind CSS
+        +ShadCN UI
+    }
+    
+    %% Backend Components
+    class Backend {
+        +Server Components
+        +API Routes
+        +Database Access
+    }
+    
+    class TRPC {
+        +Routers
+        +Procedures
+        +Middleware
+    }
+    
+    class Prisma {
+        +Schema
+        +Client
+        +Migrations
+    }
+    
+    class Database {
+        +SQLite (Dev)
+        +PostgreSQL (Prod)
+    }
+    
+    %% Authentication
+    class Auth {
+        +NextAuth
+        +Email Provider
+        +Session Management
+    }
+    
+    %% AI Services
+    class AIServices {
+        +OpenAI
+        +Groq
+        +Google Generative AI
+    }
+    
+    %% Storage
+    class Storage {
+        +AWS S3
+        +Supabase
+    }
+    
+    %% Event Processing
+    class EventProcessing {
+        +Inngest
+        +Background Jobs
+    }
+    
+    %% Relationships
+    NextApp *-- Frontend : contains
+    NextApp *-- Backend : contains
+    NextApp *-- Auth : integrates
+    NextApp *-- AIServices : uses
+    NextApp *-- Storage : uses
+    NextApp *-- EventProcessing : uses
+    
+    Frontend *-- Components : contains
+    Frontend *-- Styling : uses
+    
+    Backend *-- TRPC : implements
+    Backend *-- Prisma : uses
+    Prisma *-- Database : manages
+    
+    Auth -- Prisma : stores data in
+    
+    TRPC -- AIServices : calls
+    TRPC -- Storage : interacts with
+    TRPC -- EventProcessing : triggers
 ```
 
 ## Architecture Overview
