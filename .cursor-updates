@@ -12,3 +12,4 @@
 - Added .env file with basic development settings.
 - Fixed build errors by installing missing Storybook dependencies.
 - Added comprehensive architecture documentation with Mermaid diagram for improved developer onboarding.
+- Updated architecture diagram to use class diagram style for better visualization of component relationships.
