@@ -11,3 +11,4 @@
 - Configured local SQLite database for development instead of PostgreSQL.
 - Added .env file with basic development settings.
 - Fixed build errors by installing missing Storybook dependencies.
+- Added comprehensive architecture documentation with Mermaid diagram for improved developer onboarding.
